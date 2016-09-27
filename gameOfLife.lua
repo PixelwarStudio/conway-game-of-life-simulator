@@ -32,6 +32,10 @@ function Cell:initialize(field, x, y, state)
   self.state = state
 end
 
+function Cell:changeState()
+    self.state = 1 - self.state
+end
+
 function Cell:getNeighbors()
   local n, width, height = 0, self.field.width, self.field.height
   local x, y = self.x, self.y
