@@ -85,19 +85,6 @@ function GameOfLife:simulate()
   end
 end
 
-function GameOfLife:renderToImageData()
-  local imageData = love.image.newImageData(self.field.width, self.field.height)
-  local color
-  for x = 1, self.field.width do
-    for y = 1, self.field.height do
-      color = Cell.COLOR[self.field[x][y].state + 1]
-      imageData:setPixel(x - 1, y - 1, color[1], color[2], color[3], 255)
-    end
-  end
-  
-  return imageData
-end
-
 -- Field
 local Field = Class('Field')
 function Field:initialize(width, height)
