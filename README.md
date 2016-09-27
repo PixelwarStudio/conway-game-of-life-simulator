@@ -1,1 +1,1 @@
-# conway-game-of-life-simulator
+# Game Of Life Simulator
