@@ -68,9 +68,11 @@ function section.menu:update()
     -- Actions
     Suit.Label('Actions', Suit.layout:row(self.width, 40))
     if Suit.Button('Start', Suit.layout:row()).hit then
+        Timer.every(0.5, function() gol:simulate() end)
     end
 
     if Suit.Button('Stop', Suit.layout:row()).hit then
+        Timer.clear()
     end
 
     if Suit.Button('Next', Suit.layout:row()).hit then
