@@ -6,6 +6,8 @@ local Suit = require('lib.suit')
 -- Classes
 local Field, Rule, Cell, GameOfLife = require('gameOfLife')()
 
+local simulTimer
+
 local ceil = math.ceil
 
 -- Main Program
@@ -25,10 +27,9 @@ Suit.theme.color = {
 -- Input
 local input = {}
 input.size = {text = '50'}
-input.width = {text = '50'}
-input.height = {text = '50'}
 input.survive = {text = '23'}
 input.birth = {text = '3'}
+input.delay = {text = '0.5'}
 
 -- Sections
 local section = {}
@@ -61,18 +62,37 @@ function section.menu:update()
 
     if Suit.Button('Create', Suit.layout:row()).hit then
         field = Field(tonumber(input.size.text), tonumber(input.size.text))
-        rule = Rule({2, 3}, {3})
+        local survive = {}
+        local birth = {}
+
+        for oneRule in string.gmatch(input.survive.text,"%d") do
+            table.insert(survive, tonumber(oneRule))
+        end
+
+        for oneRule in string.gmatch(input.birth.text,"%d") do
+            table.insert(birth, tonumber(oneRule))
+        end
+
+        rule = Rule(survive, birth)
         gol = GameOfLife(field, rule)
+        
+        if isRunning then
+            Timer.cancel(simulTimer);
+            isRunning = false
+        end
     end
 
-    -- Actions
-    Suit.Label('Actions', Suit.layout:row(self.width, 40))
-    if Suit.Button('Start', Suit.layout:row()).hit then
-        Timer.every(0.5, function() gol:simulate() end)
+    -- Simulation
+    Suit.Label('Simulation', Suit.layout:row(self.width, 40))
+    Suit.Label((isRunning and '' or 'not')..' running', Suit.layout:row(self.width, 40))
+    if Suit.Button('Start', Suit.layout:row()).hit and not(isRunning) then
+        simulTimer = Timer.every(0.5, function() gol:simulate() end)
+        isRunning = true
     end
 
-    if Suit.Button('Stop', Suit.layout:row()).hit then
-        Timer.clear()
+    if Suit.Button('Stop', Suit.layout:row()).hit and isRunning then
+        Timer.cancel(simulTimer)
+        isRunning = false
     end
 
     if Suit.Button('Next', Suit.layout:row()).hit then
