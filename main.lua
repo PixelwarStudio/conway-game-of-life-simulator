@@ -4,45 +4,10 @@ local Timer = require('lib.timer')
 local Gui = require('lib.suit')
 local Gif = require('lib.gifcat')
 
+-- Classes
+local Field, Rule, Cell, GameOfLife = require('gameOfLife')()
+
 local ceil = math.ceil
-print(love.filesystem.getSaveDirectory())
-
-local Field = Class('Field')
-function Field:initialize(width, height)
-  self.width = width
-  self.height = height
-  
-  for x = 1, width do
-    self[x] = {}
-    for y = 1, height do
-      self[x][y] = Cell(self, x, y, 0)
-    end
-  end
-end
-
-function Field:createTempCopy()
-  local copy = {}
-  for x = 1, self.width do
-    copy[x] = {}
-    for y = 1, self.height do
-      copy[x][y] = 0
-    end
-  end
-  
-  return copy
-end
-
-function Field:draw(x, y, width, height)
-  local cellWidth, cellHeight = width / self.width, height / self.height
-  local cell
-  
-  for i = 1, self.width do
-    for j = 1, self.height do
-      cell = self[i][j]
-      cell:draw(x + cellWidth * (i - 1), y + cellWidth * (j - 1), cellWidth, cellHeight)
-    end
-  end
-end
 
 local Section = Class('Section')
 function Section:initialize(x, y, width, height)
