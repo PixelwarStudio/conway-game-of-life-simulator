@@ -123,5 +123,4 @@ function Field:draw(x, y, width, height)
   end
 end
 
-
 return function() return Field, Rule, Cell, GameOfLife end
