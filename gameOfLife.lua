@@ -11,11 +11,11 @@ end
 
 function Rule:check(cell)
   local n = cell:getNeighbors()
-  
+
   for _, v in ipairs(cell.state == 0 and self.birth or self.survive) do
-    if v == n then return true end
+	if v == n then return true end
   end
-  
+
   return false
 end
 
@@ -33,24 +33,24 @@ function Cell:initialize(field, x, y, state)
 end
 
 function Cell:changeState()
-    self.state = 1 - self.state
+	self.state = 1 - self.state
 end
 
 function Cell:getNeighbors()
   local n, width, height = 0, self.field.width, self.field.height
   local x, y = self.x, self.y
-  
+
   for i = x - 1, x + 1 do
     for j = y - 1, y + 1 do
       i = (i < 1 and width or (i > width and 1 or i))
       j = (j < 1 and height or (j > height and 1 or j))
-      
+
       if self.field[i][j].state == 1 then
-        n = n + 1
+      n = n + 1
       end
     end
   end
-  
+
   return n - self.state
 end
 
@@ -70,14 +70,14 @@ function GameOfLife:simulate()
   local width, height = self.field.width, self.field.height
   local cell, n
   local copy = self.field:createTempCopy()
-  
+
   for x = 1, width do
     for y = 1, height do
       cell = self.field[x][y]
       copy[x][y] = self.rule:check(cell) and 1 or 0
     end
   end
-  
+
   for x = 1, width do
     for y = 1, height do
       self.field[x][y].state = copy[x][y]
@@ -90,7 +90,7 @@ local Field = Class('Field')
 function Field:initialize(width, height)
   self.width = width
   self.height = height
-  
+
   for x = 1, width do
     self[x] = {}
     for y = 1, height do
@@ -107,14 +107,27 @@ function Field:createTempCopy()
       copy[x][y] = 0
     end
   end
-  
+
   return copy
+end
+
+function Field:toImageData()
+  local imageData = love.image.newImageData(self.width, self.height)
+  
+  for x = 1, self.width do
+    for y = 1, self.height do
+      local color = self[x][y].state == 1 and {255, 255, 255} or {0, 0, 0}
+      imageData:setPixel(x-1, y-1, color)
+    end
+  end
+
+  return imageData
 end
 
 function Field:draw(x, y, width, height)
   local cellWidth, cellHeight = width / self.width, height / self.height
   local cell
-  
+
   for i = 1, self.width do
     for j = 1, self.height do
       cell = self[i][j]
