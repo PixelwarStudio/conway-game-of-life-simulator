@@ -99,6 +99,12 @@ function section.menu:update()
         gol:simulate()
     end
 
+    -- Export
+    Suit.Label('Export', Suit.layout:row())
+    if Suit.Button('Bitmap', Suit.layout:row()).hit then
+        gol.field:toImageData():encode('png', 'format.png')
+    end
+
     _, self.height = Suit.layout:nextRow()
 end
 
