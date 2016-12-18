@@ -46,7 +46,7 @@ function Cell:getNeighbors()
       j = (j < 1 and height or (j > height and 1 or j))
 
       if self.field[i][j].state == 1 then
-      n = n + 1
+        n = n + 1
       end
     end
   end
